@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Пупа и Лупа</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            touch-action: manipulation;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        #welcome-screen,
+        #game-screen,
+        #result-screen {
+            width: 100%;
+            max-width: 500px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh;
+        }
+
+        #welcome-screen {
+            display: flex;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn {
+            background: white;
+            color: #2575fc;
+            border: none;
+            border-radius: 16px;
+            padding: 18px 24px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+            min-height: 60px;
+            min-width: 200px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+            background: #f0f0f0;
+        }
+
+        #badge {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            color: #2575fc;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-top: 40px;
+            margin-bottom: 40px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        #buttons {
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+            padding: 0 10px;
+            gap: 16px;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-height: 80px;
+            font-size: 1.3rem;
+            border-radius: 20px;
+        }
+
+        #timer {
+            position: absolute;
+            top: 20px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        #score {
+            position: absolute;
+            top: 60px;
+            font-size: 1.2rem;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+        }
+
+        #result-screen h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        #final-score {
+            font-size: 2rem;
+            margin: 20px 0;
+            color: #ffcc00;
+        }
+
+        .status {
+            font-size: 1.4rem;
+            margin: 15px 0;
+        }
+
+        @media (max-height: 600px) {
+            #badge {
+                width: 160px;
+                height: 160px;
+                font-size: 1.3rem;
+            }
+
+            .btn {
+                padding: 14px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Приветственный экран -->
+    <div id="welcome-screen">
+        <h1>Невероятные приключения<br>Пупы и Лупы</h1>
+        <button class="btn" id="start-btn">Начать игру</button>
+    </div>
+
+    <!-- Игровой экран -->
+    <div id="game-screen">
+        <div id="timer">10</div>
+        <div id="score">💰 0</div>
+        <div id="badge">Готовься!</div>
+        <div id="buttons">
+            <button class="btn action-btn" id="pupa-btn">За Пупу</button>
+            <button class="btn action-btn" id="lupa-btn">За Лупу</button>
+        </div>
+    </div>
+
+    <!-- Экран результата -->
+    <div id="result-screen">
+        <h2>Игра окончена!</h2>
+        <div id="final-score">💰 0</div>
+        <div class="status" id="status">Молодец!</div>
+        <button class="btn" id="restart-btn">Сыграть ещё</button>
+    </div>
+
+    <script>
+        // Технологии
+        const FRONTEND = ['React', 'Vue', 'CSS', 'HTML', 'Svelte', 'Tailwind', 'TypeScript', 'Webpack'];
+        const BACKEND = ['Node.js', 'Django', 'Spring', 'PostgreSQL', 'Redis', 'Go', 'Rust', 'MongoDB'];
+
+        // Состояние
+        let score = 0;
+        let timeLeft = 10;
+        let gameActive = false;
+        let currentWord = '';
+        let premiaShown = false;
+        let timerInterval;
+        let wordInterval;
+
+        // DOM элементы
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const badge = document.getElementById('badge');
+        const scoreEl = document.getElementById('score');
+        const timerEl = document.getElementById('timer');
+        const finalScoreEl = document.getElementById('final-score');
+        const statusEl = document.getElementById('status');
+
+        // Кнопки
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const pupaBtn = document.getElementById('pupa-btn');
+        const lupaBtn = document.getElementById('lupa-btn');
+
+        // Флаги для премии
+        let pupaPressed = false;
+        let lupaPressed = false;
+
+        // Начало игры
+        startBtn.addEventListener('click', startGame);
+        restartBtn.addEventListener('click', startGame);
+
+        pupaBtn.addEventListener('touchstart', () => handlePupa(true));
+        pupaBtn.addEventListener('touchend', () => handlePupa(false));
+        lupaBtn.addEventListener('touchstart', () => handleLupa(true));
+        lupaBtn.addEventListener('touchend', () => handleLupa(false));
+
+        // Для десктопа (на случай тестирования)
+        pupaBtn.addEventListener('mousedown', () => handlePupa(true));
+        pupaBtn.addEventListener('mouseup', () => handlePupa(false));
+        lupaBtn.addEventListener('mousedown', () => handleLupa(true));
+        lupaBtn.addEventListener('mouseup', () => handleLupa(false));
+
+        function handlePupa(state) {
+            if (!gameActive) return;
+            pupaPressed = state;
+            checkPremia();
+        }
+
+        function handleLupa(state) {
+            if (!gameActive) return;
+            lupaPressed = state;
+            checkPremia();
+        }
+
+        function checkPremia() {
+            if (currentWord === 'Премия' && pupaPressed && lupaPressed) {
+                score += 10;
+                updateScore();
+                // Сбросим флаги, чтобы не засчитывалось повторно
+                pupaPressed = false;
+                lupaPressed = false;
+                showFeedback('+10!');
+            }
+        }
+
+        function startGame() {
+            // Сброс
+            score = 0;
+            timeLeft = 10;
+            premiaShown = false;
+            gameActive = true;
+            updateScore();
+            timerEl.textContent = timeLeft;
+
+            // Переключение экранов
+            welcomeScreen.style.display = 'none';
+            resultScreen.style.display = 'none';
+            gameScreen.style.display = 'flex';
+
+            // Запуск таймера
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+
+            // Первое слово через 0.5 сек
+            setTimeout(changeWord, 500);
+            wordInterval = setInterval(changeWord, getRandomInterval());
+        }
+
+        function getRandomInterval() {
+            return Math.floor(Math.random() * 500) + 700; // 0.7–1.2 сек
+        }
+
+        function changeWord() {
+            if (!gameActive) return;
+
+            // Обязательно показать "Премию" хотя бы раз
+            if (!premiaShown && Math.random() < 0.3) {
+                currentWord = 'Премия';
+                premiaShown = true;
+            } else {
+                // Выбираем случайно: фронт или бэк
+                const isFront = Math.random() < 0.5;
+                const list = isFront ? FRONTEND : BACKEND;
+                currentWord = list[Math.floor(Math.random() * list.length)];
+            }
+
+            badge.textContent = currentWord;
+            badge.style.color = currentWord === 'Премия'
+                ? '#ff6b6b'
+                : (FRONTEND.includes(currentWord) ? '#4ecdc4' : '#ff6b9d');
+        }
+
+        function updateScore() {
+            scoreEl.textContent = `💰 ${score}`;
+        }
+
+        function showFeedback(text) {
+            const feedback = document.createElement('div');
+            feedback.textContent = text;
+            feedback.style.position = 'absolute';
+            feedback.style.top = '50%';
+            feedback.style.left = '50%';
+            feedback.style.transform = 'translate(-50%, -50%)';
+            feedback.style.fontSize = '2rem';
+            feedback.style.fontWeight = 'bold';
+            feedback.style.color = '#ffcc00';
+            feedback.style.pointerEvents = 'none';
+            feedback.style.zIndex = '10';
+            document.body.appendChild(feedback);
+
+            setTimeout(() => {
+                feedback.remove();
+            }, 600);
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(timerInterval);
+            clearInterval(wordInterval);
+
+            // Финальный экран
+            finalScoreEl.textContent = `💰 ${score}`;
+
+            let status = '';
+            if (score >= 30) status = 'Ты — легенда!';
+            else if (score >= 20) status = 'Отличный результат!';
+            else if (score >= 10) status = 'Неплохо!';
+            else status = 'Попробуй ещё раз!';
+
+            statusEl.textContent = status;
+
+            gameScreen.style.display = 'none';
+            resultScreen.style.display = 'flex';
+        }
+
+        // Обработка нажатий на кнопки во время игры
+        pupaBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!gameActive || currentWord === 'Премия') return;
+            if (FRONTEND.includes(currentWord)) {
+                score += 5;
+                updateScore();
+                showFeedback('+5!');
+            } else {
+                // Неверный выбор — штраф
+                score = Math.max(0, score - 2);
+                updateScore();
+                showFeedback('❌');
+            }
+        });
+
+        lupaBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!gameActive || currentWord === 'Премия') return;
+            if (BACKEND.includes(currentWord)) {
+                score += 5;
+                updateScore();
+                showFeedback('+5!');
+            } else {
+                score = Math.max(0, score - 2);
+                updateScore();
+                showFeedback('❌');
+            }
+        });
+    </script>
+</body>
+
+</html>
