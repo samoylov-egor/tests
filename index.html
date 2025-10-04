@@ -53,68 +53,159 @@
             background: white;
             color: #2575fc;
             border: none;
-            border-radius: 16px;
-            padding: 18px 24px;
+            border-radius: 20px;
+            padding: 20px 28px;
             font-size: 1.4rem;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.1s, background 0.2s;
+            transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.15s ease;
             min-height: 60px;
             min-width: 200px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            /* Улучшенные тач-таргеты */
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .btn:active {
-            transform: scale(0.96);
-            background: #f0f0f0;
+            transform: scale(0.95) translateY(2px);
+            background: #f8f8f8;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:focus {
+            outline: none;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 0 0 3px rgba(37, 117, 252, 0.3);
         }
 
         #badge {
-            width: 200px;
-            height: 200px;
+            width: 220px;
+            height: 220px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: white;
+            background: linear-gradient(145deg, #ffffff, #f8f8f8);
             color: #2575fc;
             border-radius: 50%;
-            font-size: 1.6rem;
-            font-weight: bold;
+            font-size: 1.8rem;
+            font-weight: 700;
             text-align: center;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            padding: 24px;
             margin-top: 40px;
             margin-bottom: 40px;
-            animation: pulse 2s infinite;
+
+            /* Улучшенная тень с несколькими слоями */
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.25),
+                0 10px 20px rgba(0, 0, 0, 0.15),
+                inset 0 2px 4px rgba(255, 255, 255, 0.8),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.05);
+
+            /* Плавная анимация пульсации */
+            animation: pulse 2.5s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #badge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.1),
+                    transparent);
+            animation: shimmer 3s linear infinite;
+            pointer-events: none;
         }
 
         @keyframes pulse {
-            0% {
+
+            0%,
+            100% {
                 transform: scale(1);
+                box-shadow:
+                    0 20px 40px rgba(0, 0, 0, 0.25),
+                    0 10px 20px rgba(0, 0, 0, 0.15),
+                    inset 0 2px 4px rgba(255, 255, 255, 0.8),
+                    inset 0 -2px 4px rgba(0, 0, 0, 0.05);
             }
 
             50% {
-                transform: scale(1.05);
+                transform: scale(1.08);
+                box-shadow:
+                    0 25px 50px rgba(0, 0, 0, 0.3),
+                    0 15px 30px rgba(0, 0, 0, 0.2),
+                    inset 0 2px 4px rgba(255, 255, 255, 0.9),
+                    inset 0 -2px 4px rgba(0, 0, 0, 0.08);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
             }
 
             100% {
-                transform: scale(1);
+                transform: translateX(100%) translateY(100%) rotate(45deg);
             }
         }
 
         #buttons {
             display: flex;
             width: 100%;
-            justify-content: space-around;
-            padding: 0 10px;
-            gap: 16px;
+            justify-content: space-between;
+            padding: 0 20px 20px 20px;
+            gap: 20px;
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(transparent, rgba(37, 117, 252, 0.1));
+            padding-top: 30px;
+            margin-top: auto;
         }
 
         .action-btn {
             flex: 1;
-            min-height: 80px;
-            font-size: 1.3rem;
-            border-radius: 20px;
+            min-height: 88px;
+            font-size: 1.5rem;
+            border-radius: 24px;
+            padding: 24px 16px;
+            /* Особые стили для нижних кнопок */
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            box-shadow:
+                0 8px 16px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #4ecdc4, #2575fc);
+        }
+
+        .action-btn:active {
+            transform: scale(0.97) translateY(3px);
+            box-shadow:
+                0 4px 8px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 5, 255, 0.6);
+        }
+
+        .action-btn:focus {
+            box-shadow:
+                0 8px 16px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8),
+                0 0 0 3px rgba(37, 117, 252, 0.4);
         }
 
         #timer {
@@ -150,17 +241,85 @@
             margin: 15px 0;
         }
 
+        /* Медиазапросы для адаптивности */
         @media (max-height: 600px) {
             #badge {
-                width: 160px;
-                height: 160px;
-                font-size: 1.3rem;
+                width: 180px;
+                height: 180px;
+                font-size: 1.5rem;
+                margin-top: 20px;
+                margin-bottom: 20px;
             }
 
             .btn {
-                padding: 14px;
+                padding: 18px 24px;
+                font-size: 1.3rem;
+            }
+
+            .action-btn {
+                min-height: 76px;
+                font-size: 1.3rem;
+                padding: 20px 14px;
+            }
+
+            #timer {
+                top: 10px;
                 font-size: 1.2rem;
             }
+
+            #score {
+                top: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            #badge {
+                width: 180px;
+                height: 180px;
+                font-size: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 20px;
+            }
+
+            .action-btn {
+                font-size: 1.3rem;
+                min-height: 80px;
+            }
+
+            #buttons {
+                padding: 0 10px 15px 10px;
+                gap: 15px;
+            }
+        }
+
+        /* Оптимизация производительности */
+        * {
+            will-change: auto;
+        }
+
+        #badge,
+        .btn {
+            will-change: transform;
+            backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+
+        /* Предотвращение зума на двойное нажатие */
+        * {
+            touch-action: manipulation;
+        }
+
+        /* Улучшение скролла на iOS */
+        body {
+            -webkit-overflow-scrolling: touch;
         }
     </style>
 </head>
@@ -229,16 +388,43 @@
         startBtn.addEventListener('click', startGame);
         restartBtn.addEventListener('click', startGame);
 
-        pupaBtn.addEventListener('touchstart', () => handlePupa(true));
-        pupaBtn.addEventListener('touchend', () => handlePupa(false));
-        lupaBtn.addEventListener('touchstart', () => handleLupa(true));
-        lupaBtn.addEventListener('touchend', () => handleLupa(false));
+        // Оптимизированные обработчики для мобильных устройств
+        pupaBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handlePupa(true);
+        }, { passive: false });
+
+        pupaBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handlePupa(false);
+        }, { passive: false });
+
+        lupaBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleLupa(true);
+        }, { passive: false });
+
+        lupaBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleLupa(false);
+        }, { passive: false });
 
         // Для десктопа (на случай тестирования)
         pupaBtn.addEventListener('mousedown', () => handlePupa(true));
         pupaBtn.addEventListener('mouseup', () => handlePupa(false));
         lupaBtn.addEventListener('mousedown', () => handleLupa(true));
         lupaBtn.addEventListener('mouseup', () => handleLupa(false));
+
+        // Предотвращение выделения текста при долгом нажатии
+        document.addEventListener('selectstart', (e) => {
+            if (gameActive) {
+                e.preventDefault();
+            }
+        });
 
         function handlePupa(state) {
             if (!gameActive) return;
@@ -327,15 +513,43 @@
             feedback.style.top = '50%';
             feedback.style.left = '50%';
             feedback.style.transform = 'translate(-50%, -50%)';
-            feedback.style.fontSize = '2rem';
+            feedback.style.fontSize = '2.5rem';
             feedback.style.fontWeight = 'bold';
             feedback.style.color = '#ffcc00';
             feedback.style.pointerEvents = 'none';
             feedback.style.zIndex = '10';
+            feedback.style.textShadow = '0 2px 4px rgba(0, 0, 0, 0.5)';
+            feedback.style.animation = 'feedbackPop 0.6s ease-out forwards';
+            feedback.style.willChange = 'transform, opacity';
             document.body.appendChild(feedback);
 
+            // Добавляем CSS анимацию для обратной связи
+            if (!document.getElementById('feedback-animation')) {
+                const style = document.createElement('style');
+                style.id = 'feedback-animation';
+                style.textContent = `
+                    @keyframes feedbackPop {
+                        0% {
+                            transform: translate(-50%, -50%) scale(0.5);
+                            opacity: 0;
+                        }
+                        50% {
+                            transform: translate(-50%, -50%) scale(1.2);
+                            opacity: 1;
+                        }
+                        100% {
+                            transform: translate(-50%, -60%) scale(1);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
             setTimeout(() => {
-                feedback.remove();
+                if (document.body.contains(feedback)) {
+                    feedback.remove();
+                }
             }, 600);
         }
 
@@ -390,5 +604,7 @@
         });
     </script>
 </body>
+
+</html>
 
 </html>
