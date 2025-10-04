@@ -159,14 +159,14 @@
         #buttons {
             display: flex;
             width: 100%;
-            justify-content: space-between;
-            padding: 0 20px 20px 20px;
+            justify-content: center;
+            padding: 20px;
             gap: 20px;
-            position: sticky;
-            bottom: 0;
-            background: linear-gradient(transparent, rgba(37, 117, 252, 0.1));
-            padding-top: 30px;
-            margin-top: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin-top: 150px;
         }
 
         .action-btn {
@@ -271,6 +271,12 @@
                 top: 40px;
                 font-size: 1rem;
             }
+            
+            #buttons {
+                margin-top: 100px;
+                gap: 12px;
+                padding: 10px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -295,8 +301,9 @@
             }
 
             #buttons {
-                padding: 0 10px 15px 10px;
+                padding: 15px;
                 gap: 15px;
+                margin-top: 120px;
             }
         }
 
