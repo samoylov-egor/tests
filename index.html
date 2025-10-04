@@ -440,6 +440,10 @@
             e.preventDefault();
             e.stopPropagation();
             handlePupa(false);
+            // Проверяем обычный ответ после отпускания на случай, если это не Премия
+            if (currentWord !== 'Премия') {
+                handleRegularAnswer('pupa');
+            }
         }, { passive: false });
 
         lupaBtn.addEventListener('touchstart', (e) => {
@@ -452,13 +456,27 @@
             e.preventDefault();
             e.stopPropagation();
             handleLupa(false);
+            // Проверяем обычный ответ после отпускания на случай, если это не Премия
+            if (currentWord !== 'Премия') {
+                handleRegularAnswer('lupa');
+            }
         }, { passive: false });
 
         // Для десктопа (на случай тестирования)
         pupaBtn.addEventListener('mousedown', () => handlePupa(true));
-        pupaBtn.addEventListener('mouseup', () => handlePupa(false));
+        pupaBtn.addEventListener('mouseup', () => {
+            handlePupa(false);
+            if (currentWord !== 'Премия') {
+                handleRegularAnswer('pupa');
+            }
+        });
         lupaBtn.addEventListener('mousedown', () => handleLupa(true));
-        lupaBtn.addEventListener('mouseup', () => handleLupa(false));
+        lupaBtn.addEventListener('mouseup', () => {
+            handleLupa(false);
+            if (currentWord !== 'Премия') {
+                handleRegularAnswer('lupa');
+            }
+        });
 
         // Предотвращение выделения текста при долгом нажатии
         document.addEventListener('selectstart', (e) => {
@@ -487,6 +505,26 @@
                 pupaPressed = false;
                 lupaPressed = false;
                 showFeedback('+10!');
+            }
+        }
+
+        // Обработка обычных ответов (не Премия) только при отпускании кнопки
+        function handleRegularAnswer(buttonType) {
+            if (!gameActive || currentWord === 'Премия') return;
+            
+            if (buttonType === 'pupa' && FRONTEND.includes(currentWord)) {
+                score += 5;
+                updateScore();
+                showFeedback('+5!');
+            } else if (buttonType === 'lupa' && BACKEND.includes(currentWord)) {
+                score += 5;
+                updateScore();
+                showFeedback('+5!');
+            } else {
+                // Неверный выбор — штраф
+                score = Math.max(0, score - 2);
+                updateScore();
+                showFeedback('❌');
             }
         }
 
@@ -614,35 +652,8 @@
             resultScreen.style.display = 'flex';
         }
 
-        // Обработка нажатий на кнопки во время игры
-        pupaBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (!gameActive || currentWord === 'Премия') return;
-            if (FRONTEND.includes(currentWord)) {
-                score += 5;
-                updateScore();
-                showFeedback('+5!');
-            } else {
-                // Неверный выбор — штраф
-                score = Math.max(0, score - 2);
-                updateScore();
-                showFeedback('❌');
-            }
-        });
-
-        lupaBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (!gameActive || currentWord === 'Премия') return;
-            if (BACKEND.includes(currentWord)) {
-                score += 5;
-                updateScore();
-                showFeedback('+5!');
-            } else {
-                score = Math.max(0, score - 2);
-                updateScore();
-                showFeedback('❌');
-            }
-        });
+        // Старые обработчики кликов удалены - теперь используем только touch/mouse события
+        // для правильной обработки как одновременного нажатия (Премия), так и обычных ответов
     </script>
 </body>
 
