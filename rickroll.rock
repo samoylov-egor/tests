@@ -1,0 +1,18 @@
+Listen to Input
+
+If Input is "Rick"
+Say "Never gonna give you up!"
+
+If Input is "Roll"
+Say "Never gonna let you down!"
+
+If Input is "Rick Roll"
+Say "Never gonna give you up!"
+Say "Never gonna let you down!"
+
+If Input is "Roll Rick"
+Say "Never gonna let you down!"
+Say "Never gonna give you up!"
+
+If Input is not "Rick" and Input is not "Roll" and Input is not "Rick Roll" and Input is not "Roll Rick"
+Say "Silence...."
